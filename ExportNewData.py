@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # @Time   : 3/6/2018
-# @Author : Sun Zhang
+# @Author : aimkiray
 # @Email  : root@meowwoo.com
 
 import xlwings as xw
