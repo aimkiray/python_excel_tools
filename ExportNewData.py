@@ -5,16 +5,20 @@
 # @Email  : root@meowwoo.com
 
 import xlwings as xw
+import os
 
 # old excel file path
-old_fn = r"C:\Users\filename.xlsx"
+old_file_name = r"C:\Users\filename.xlsx"
 # new excel file path
-new_fn = r"C:\Users\filename.xlsx"
+new_file_name = r"C:\Users\filename.xlsx"
 # Maximum column letter (fix bug)
-letter = 'W'
+last_letter = 'W'
 # Attention: If you want to define column format, please find the corresponding code.
 
 # The output file is in the output folder.
+output_dir = r"output"
+if not os.path.exists(output_dir):
+    os.mkdir(output_dir)
 
 
 class ExportNewData(object):
@@ -70,5 +74,5 @@ class ExportNewData(object):
 
 
 if __name__ == '__main__':
-    export = ExportNewData(old_fn, new_fn, letter)
+    export = ExportNewData(old_file_name, new_file_name, last_letter)
     export.import_excel()

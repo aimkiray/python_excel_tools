@@ -5,16 +5,20 @@
 # @Email  : root@meowwoo.com
 
 import xlwings as xw
+import os
 
 # excel file path
-fn = r"C:\Users\filename.xlsx"
+file_name = r"C:\Users\filename.xlsx"
 # split number
-num = 10
+split_num = 10
 # Maximum column letter (fix bug)
-letter = 'W'
+last_letter = 'W'
 # Attention: If you want to define column format, please find the corresponding code (two place).
 
 # The output file is in the output folder.
+output_dir = r"output"
+if not os.path.exists(output_dir):
+    os.mkdir(output_dir)
 
 
 class ExportNewData(object):
@@ -40,9 +44,9 @@ class ExportNewData(object):
         part = (total - 1) // self.num
         count = 1
 
-        raw_name = fn.split('\\')[-1].split('.')[0]
+        raw_name = self.fn.split('\\')[-1].split('.')[0]
 
-        while count <= num:
+        while count <= self.num:
             wb2 = app.books.add()
             sht2 = wb2.sheets['Sheet1']
             # Need to define the format of the column
@@ -53,12 +57,8 @@ class ExportNewData(object):
                 field = "$A$1:$" + self.letter + "$" + str(part + 1)
                 # fill in data
                 sht2.range('A1').options(expand='table').value = sht1.range(field).value
-                sht2.autofit()
-                wb2.save(r"output/" + raw_name + "_" + str(count) + ".xlsx")
-                wb2.close()
-                count = count + 1
             # last part contains the remaining part
-            elif count == num:
+            elif count == self.num:
                 # fill in title
                 sht2.range('A1').expand("right").value = sht1.range('A1').expand("right").value
                 field = "$A$" + str((count - 1) * part + 2) + ":$" + self.letter + "$" + str(total)
@@ -66,24 +66,21 @@ class ExportNewData(object):
                 sht2.range('A1:F' + str(total - (count - 1) * part + 2)).number_format = '@'
                 # fill in data
                 sht2.range('A2').options(expand='table').value = sht1.range(field).value
-                sht2.autofit()
-                wb2.save(r"output/" + raw_name + "_" + str(count) + ".xlsx")
-                wb2.close()
-                count = count + 1
             else:
                 # fill in title
                 sht2.range('A1').expand("right").value = sht1.range('A1').expand("right").value
                 field = "$A$" + str((count - 1) * part + 2) + ":$" + self.letter + "$" + str(count * part + 1)
                 # fill in data
                 sht2.range('A2').options(expand='table').value = sht1.range(field).value
-                sht2.autofit()
-                wb2.save(r"output/" + raw_name + "_" + str(count) + ".xlsx")
-                wb2.close()
-                count = count + 1
+
+            sht2.autofit()
+            wb2.save(r"output/" + raw_name + "_" + str(count) + ".xlsx")
+            wb2.close()
+            count = count + 1
 
         wb1.app.quit()
 
 
 if __name__ == '__main__':
-    export = ExportNewData(fn, num, letter)
+    export = ExportNewData(file_name, split_num, last_letter)
     export.import_excel()
